@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social Security Earnings Test Calculator 2027</title>
+<meta name="description" content="Working while collecting Social Security before full retirement age? Estimate how much of your 2027 benefit is withheld under the $25,560 / $67,920 earnings limits from SSA.">
+<link rel="canonical" href="https://heytakenote.github.io/en/tools/social-security-earnings-test-2027.html">
+<style>:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1f;--muted:#6b6b70;--line:#e3e3e0;--accent:#1f6feb;--good:#1a7f37;--warn:#b35900}
+@media (prefers-color-scheme:dark){:root{--bg:#161618;--card:#1f1f22;--text:#ececee;--muted:#a0a0a8;--line:#33333a;--accent:#6ea8ff;--good:#4ac26b;--warn:#f0a050}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+main{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.45rem;line-height:1.3;margin:0 0 6px}
+h2{font-size:1.1rem;margin:28px 0 8px}
+p.sub{color:var(--muted);margin:0 0 20px;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;font-size:.92rem;margin:12px 0 4px}
+label:first-child{margin-top:0}
+small.hint{display:block;color:var(--muted);font-weight:400;font-size:.8rem}
+input,select{width:100%;font-size:1rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.result .big{font-size:1.6rem;font-weight:700;color:var(--accent);margin:2px 0 6px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+.note{font-size:.85rem;color:var(--muted)}
+.warn{color:var(--warn)}
+ul{padding-left:20px}
+a{color:var(--accent)}
+a.tool{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;color:var(--text);text-decoration:none}
+a.tool strong{display:block;font-size:1.05rem;color:var(--accent)}
+a.tool span{display:block;font-size:.88rem;color:var(--muted);margin-top:4px}
+nav{font-size:.88rem;margin-bottom:14px}
+footer{font-size:.82rem;color:var(--muted);margin-top:28px;border-top:1px solid var(--line);padding-top:12px}</style>
+</head>
+<body>
+<main>
+<nav><a href="../">← All calculators</a></nav>
+<h1>Social Security Earnings Test Calculator 2027</h1>
+<p class="sub">If you claim Social Security before full retirement age (FRA) and keep working, SSA holds back some checks once your wages pass a yearly limit. See how many. Values as of 2026-11-27.</p>
+
+<div class="card">
+  <label for="grp">Your situation in 2027</label>
+  <select id="grp">
+    <option value="under">Under full retirement age all year</option>
+    <option value="reach">Reaching full retirement age during 2027</option>
+  </select>
+  <div id="fraBox" hidden>
+    <label for="fra">Month you reach full retirement age<small class="hint">Only earnings before this month count, and checks from this month on are not withheld.</small></label>
+    <select id="fra"></select>
+  </div>
+  <label for="ben">Monthly Social Security benefit ($)</label>
+  <input id="ben" type="number" inputmode="numeric" min="0" step="10" value="1800">
+  <label for="earn">Expected 2027 earnings from work ($)<small class="hint">Gross wages plus net self-employment income. Pensions, investments, and interest don't count.</small></label>
+  <input id="earn" type="number" inputmode="numeric" min="0" step="500" value="40000">
+</div>
+
+<div class="card result" aria-live="polite">
+  <div>Benefits withheld in 2027</div>
+  <div class="big" id="out">$0</div>
+  <table id="tbl"></table>
+  <p class="note" id="msg"></p>
+</div>
+
+<h2>2027 earnings limits</h2>
+<table>
+  <tr><th>Situation</th><th class="n">Annual limit</th><th class="n">Withholding</th></tr>
+  <tr><td>Under FRA all year</td><td class="n">$25,560<br><span class="note">($2,130/mo)</span></td><td class="n">$1 per $2 over</td></tr>
+  <tr><td>Year you reach FRA<br><span class="note">earnings before FRA month</span></td><td class="n">$67,920<br><span class="note">($5,660/mo)</span></td><td class="n">$1 per $3 over</td></tr>
+  <tr><td>From FRA month on</td><td class="n">No limit</td><td class="n">None</td></tr>
+</table>
+<p class="note">2026 limits were $24,480 and $65,160. SSA also announced a 3.6% COLA for 2027.</p>
+
+<h2>How withholding works</h2>
+<ul>
+  <li>SSA usually holds back <strong>whole monthly checks</strong> from the start of the year until the amount owed is covered. That's why the calculator shows full months.</li>
+  <li>If the whole months add up to more than required, the extra is paid back the following year.</li>
+  <li>Withheld benefits aren't lost for good. At FRA, SSA recalculates your monthly benefit to give credit for the months it held back.</li>
+  <li>In your first year of retirement, a special monthly rule can pay a full check for any month your wages stay under the monthly limit, whatever you earned for the year.</li>
+</ul>
+
+<h2>FAQ</h2>
+<p><strong>Does my spouse's income count?</strong><br>No. Only your own earnings from work count toward your limit. But withholding from your record can reduce benefits paid to family members on it.</p>
+<p><strong>What if my estimate changes?</strong><br>Report updated earnings estimates to SSA during the year to avoid overpayments you'd later have to repay.</p>
+
+<footer>
+  <p>Sources: <a href="https://www.ssa.gov/oact/cola/rtea.html">SSA – Exempt Amounts Under the Earnings Test</a> · <a href="https://www.ssa.gov/news/en/cola/factsheets/2027.html">SSA 2027 COLA Fact Sheet</a>. Values as of 2026-11-27.</p>
+  <p>This calculator gives an estimate for information only. Your actual withholding is set by SSA. © heytakenote</p>
+</footer>
+</main>
+<script>
+const M=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const $=id=>document.getElementById(id), v=id=>Math.max(0,parseFloat($(id).value)||0);
+const usd=n=>'$'+Math.round(n).toLocaleString('en-US');
+M.forEach((m,i)=>{if(i>0){const o=document.createElement('option');o.value=i;o.textContent=m+' 2027';$('fra').appendChild(o);}});
+$('fra').value=6;
+function calc(){
+  const reach=$('grp').value==='reach';$('fraBox').hidden=!reach;
+  const limit=reach?67920:25560,div=reach?3:2;
+  const months=reach?+$('fra').value:12;
+  const ben=v('ben'),earn=v('earn');
+  const over=Math.max(0,earn-limit),owed=over/div;
+  const payable=ben*months;
+  const need=Math.min(owed,payable);
+  const mHeld=ben>0?Math.min(months,Math.ceil(need/ben-1e-9)):0;
+  const held=mHeld*ben,refund=Math.max(0,held-need);
+  $('out').textContent=usd(need);
+  $('tbl').innerHTML='<tr><td>Earnings limit</td><td class="n">'+usd(limit)+'</td></tr>'+
+'<tr><td>Earnings over the limit</td><td class="n">'+usd(over)+'</td></tr>'+
+'<tr><td>Required withholding ($1 per $'+div+')</td><td class="n">'+usd(owed)+'</td></tr>'+
+'<tr><td>Monthly checks likely held</td><td class="n">'+mHeld+' of '+months+'</td></tr>'+
+'<tr><td>Paid back next year (over-withheld)</td><td class="n">'+usd(refund)+'</td></tr>'+
+'<tr><td>Benefits you still receive '+(reach?'before FRA':'in 2027')+'</td><td class="n">'+usd(payable-need)+'</td></tr>';
+  let msg='';
+  if(over===0)msg='You are under the limit, so nothing is withheld.';
+  else if(owed>=payable)msg='Withholding would cover every check '+(reach?'before FRA':'this year')+'. You may want to think about delaying your claim.';
+  else msg='Each extra $'+div+' you earn above the limit costs $1 of benefits this year.';
+  $('msg').textContent=msg;
+}
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>
