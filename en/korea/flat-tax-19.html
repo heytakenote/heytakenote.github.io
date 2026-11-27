@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Korea 19% Flat Tax Calculator for Foreign Workers | heytakenote</title>
+<meta name="description" content="Should you choose Korea's 19% flat income tax rate for foreign workers? Compare it with the regular progressive tax in one minute. Includes the proposed 21% rate. Free, in English.">
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1f;--muted:#6b6b70;--line:#e3e3e0;--accent:#1f6feb;--accent-soft:#e8f0fe;--good:#0a7d4f;--warn:#a45a00}
+@media (prefers-color-scheme:dark){:root{--bg:#161618;--card:#1f1f22;--text:#ececee;--muted:#a0a0a8;--line:#33333a;--accent:#6ea8ff;--accent-soft:#1f2a3d;--good:#4cc38a;--warn:#f0a443}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;line-height:1.6;font-size:16px}
+main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+a{color:var(--accent)}
+h1{font-size:1.4rem;margin:8px 0 4px;line-height:1.35}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:0 0 6px;font-size:.95rem}
+.field{margin-bottom:16px}
+.hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+input[type=number]{width:100%;font-size:1.05rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);min-width:0}
+.verdict{font-size:1.3rem;font-weight:800;color:var(--good);margin:2px 0 10px;line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{text-align:right;font-size:.8rem;color:var(--muted);font-weight:600;padding-left:6px}
+th:first-child{text-align:left;padding-left:0}
+td+td{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;padding-left:6px}
+tr:last-child td{border-bottom:0}
+tr.sum td{font-weight:800}
+.cmp{font-size:.8rem;table-layout:fixed}
+.cmp td,.cmp th{overflow-wrap:anywhere}
+.cmp td:first-child,.cmp th:first-child{width:28%}
+.best{color:var(--good)}
+.note{margin-top:12px;padding:10px 12px;background:var(--accent-soft);border-radius:10px;font-size:.92rem}
+.warn{color:var(--warn)}
+h2{font-size:1.05rem;margin:0 0 8px}
+ul{padding-left:18px;margin:6px 0}
+li{margin-bottom:4px}
+.small{font-size:.85rem;color:var(--muted)}
+details{margin-top:10px;font-size:.9rem}
+summary{cursor:pointer;color:var(--accent)}
+footer{font-size:.82rem;color:var(--muted);margin-top:20px}
+</style>
+</head>
+<body>
+<main>
+<p class="small"><a href="./">← Calculators for foreigners in Korea</a></p>
+<h1>Korea 19% Flat Tax vs. Regular Tax Calculator</h1>
+<p class="sub">For foreign employees in Korea · Rules checked 2026-11-27 · Income Tax Act and Restriction of Special Taxation Act</p>
+
+<section class="card">
+  <div class="field">
+    <label for="gross">Annual salary, taxable part (KRW)</label>
+    <input id="gross" type="number" inputmode="numeric" min="0" step="1000000" value="60000000">
+    <div class="hint">Total pay for the year before tax, without tax-free allowances. Your payslip or 근로소득 원천징수영수증 shows this as 총급여.</div>
+  </div>
+  <div class="field">
+    <label for="free">Tax-free allowances per year (KRW)</label>
+    <input id="free" type="number" inputmode="numeric" min="0" step="100000" value="2400000">
+    <div class="hint">Meal allowance and other 비과세 items on your payslip. Under the flat rate, these are generally taxed too.</div>
+  </div>
+  <div class="field">
+    <label for="ppl">People you can claim (including yourself)</label>
+    <input id="ppl" type="number" inputmode="numeric" min="1" max="10" step="1" value="1">
+    <div class="hint">₩1.5 million deduction per person. A spouse or family member counts only if they meet the income and age rules.</div>
+  </div>
+  <div class="field">
+    <label for="ins">Social insurance you paid this year (KRW, optional)</label>
+    <input id="ins" type="number" inputmode="numeric" min="0" step="100000" value="0">
+    <div class="hint">National Pension, health insurance, long-term care and employment insurance taken from your pay. Under the regular tax these are deducted.</div>
+  </div>
+</section>
+
+<section class="card" aria-live="polite">
+  <div class="small">Result</div>
+  <div class="verdict" id="verdict">-</div>
+  <table class="cmp">
+    <tr><th></th><th>Regular</th><th>Flat 19%</th><th>Flat 21%*</th></tr>
+    <tr><td>Income tax</td><td id="pTax">-</td><td id="f19Tax">-</td><td id="f21Tax">-</td></tr>
+    <tr><td>Local income tax (10%)</td><td id="pLoc">-</td><td id="f19Loc">-</td><td id="f21Loc">-</td></tr>
+    <tr class="sum"><td>Total tax</td><td id="pSum">-</td><td id="f19Sum">-</td><td id="f21Sum">-</td></tr>
+    <tr><td>Effective rate</td><td id="pEff">-</td><td id="f19Eff">-</td><td id="f21Eff">-</td></tr>
+  </table>
+  <p class="small">* 21% is a government proposal sent to the National Assembly in September 2026. It is not law yet.</p>
+  <div class="note" id="note">-</div>
+  <details>
+    <summary>See the regular tax calculation step by step</summary>
+    <table id="steps"></table>
+  </details>
+</section>
+
+<section class="card">
+  <h2>What is the 19% flat tax?</h2>
+  <ul>
+    <li>Foreign employees in Korea can choose to pay <strong>19% of their total pay</strong> as income tax instead of the regular progressive rates (6% to 45%). With local income tax, that is 20.9%.</li>
+    <li>Under the flat rate you get <strong>no deductions or tax credits</strong>, and most tax-free allowances are added to your taxable pay.</li>
+    <li>Who can choose it under current law: foreign employees who <strong>started working in Korea on or before 31 December 2026</strong>, for up to <strong>20 years</strong> from the first day of work in Korea.</li>
+    <li>Not available to daily workers, or to people working for a company with a special relationship to them (some exceptions apply, such as certain regional headquarters).</li>
+    <li>You must apply. Ask your employer's payroll team. Your employer can then withhold 19% from your monthly pay.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Proposed change: 19% → 21%</h2>
+  <ul>
+    <li>The 2026 government tax reform plan proposes raising the flat rate from 19% to <strong>21%</strong> and extending the start-date deadline to <strong>31 December 2029</strong>.</li>
+    <li>The bill was sent to the National Assembly on 3 September 2026. Tax bills are usually voted on in December, so the final rule and start date may change.</li>
+    <li>We will update this calculator when the law is final.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>How the regular tax is estimated here</h2>
+  <ul>
+    <li>Earned income deduction (근로소득공제) by the legal table, up to ₩20 million.</li>
+    <li>Basic deduction ₩1.5 million per person, and the social insurance you entered.</li>
+    <li>Progressive rates: 6% up to ₩14M, 15% to ₩50M, 24% to ₩88M, 35% to ₩150M, 38% to ₩300M, 40% to ₩500M, 42% to ₩1B, 45% above.</li>
+    <li>Earned income tax credit (근로소득세액공제) with its salary-based limit, and the ₩130,000 standard tax credit.</li>
+    <li>Other deductions (credit cards, medical, education, rent, insurance, children) are not included. If you have them, your regular tax is lower than shown here, so the flat rate becomes less attractive.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Related calculator</h2>
+  <ul>
+    <li><a href="severance-pay.html">Korea severance pay calculator (E-9, H-2 departure insurance)</a></li>
+  </ul>
+</section>
+
+<footer>
+  <p>Sources (Korean): <a href="https://www.law.go.kr/LSW//lsLawLinkInfo.do?lsJoLnkSeq=1001022464&lsId=001584&chrClsCd=010202&print=print" rel="noopener">Restriction of Special Taxation Act Art. 18-2</a> (in force 2026-09-18); <a href="https://www.law.go.kr/법령/소득세법" rel="noopener">Income Tax Act</a> Art. 47, 50, 55, 59, 59-4; National Tax Service <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667" rel="noopener">income tax rates</a>; 2026 tax reform plan as reported in <a href="https://www.lawtimes.co.kr/news/articleView.html?idxno=227949" rel="noopener">Law Times (2026-10-19)</a>. Checked 2026-11-27.</p>
+  <p>This calculator is for reference only and is not tax advice. © heytakenote</p>
+</footer>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function krw(v){return '₩'+Math.round(v).toLocaleString('en-US');}
+  function pct(v){return (v*100).toFixed(1)+'%';}
+  function earnedDed(g){var d;
+    if(g<=5e6)d=g*0.7; else if(g<=15e6)d=3.5e6+(g-5e6)*0.4; else if(g<=45e6)d=7.5e6+(g-15e6)*0.15;
+    else if(g<=1e8)d=12e6+(g-45e6)*0.05; else d=14.75e6+(g-1e8)*0.02; return Math.min(d,20e6,g);}
+  var BR=[[14e6,.06,0],[50e6,.15,1.26e6],[88e6,.24,5.76e6],[150e6,.35,15.44e6],[300e6,.38,19.94e6],[500e6,.40,25.94e6],[1e9,.42,35.94e6],[Infinity,.45,65.94e6]];
+  function rateTax(b){for(var i=0;i<BR.length;i++){if(b<=BR[i][0])return Math.max(0,b*BR[i][1]-BR[i][2]);}}
+  function creditCap(g){
+    if(g<=33e6)return 740000;
+    if(g<=70e6)return Math.max(660000,740000-(g-33e6)*0.008);
+    if(g<=120e6)return Math.max(500000,660000-(g-70e6)/2);
+    return Math.max(200000,500000-(g-120e6)/2);}
+  function calc(){
+    var g=Math.max(0,+$('gross').value||0), free=Math.max(0,+$('free').value||0);
+    var ppl=Math.max(1,Math.floor(+$('ppl').value||1)), ins=Math.max(0,+$('ins').value||0);
+    var ed=earnedDed(g), inc=g-ed, base=Math.max(0,inc-ppl*1.5e6-ins);
+    var calcTax=rateTax(base);
+    var ec=calcTax<=1.3e6?calcTax*0.55:715000+(calcTax-1.3e6)*0.3; ec=Math.min(ec,creditCap(g));
+    var std=130000;
+    var pTax=Math.max(0,calcTax-ec-std);
+    var all=g+free, f19=all*0.19, f21=all*0.21;
+    var rows=[['p',pTax],['f19',f19],['f21',f21]];
+    rows.forEach(function(r){$(r[0]+'Tax').textContent=krw(r[1]);$(r[0]+'Loc').textContent=krw(r[1]*0.1);$(r[0]+'Sum').textContent=krw(r[1]*1.1);$(r[0]+'Eff').textContent=all?pct(r[1]*1.1/all):'-';});
+    ['pSum','f19Sum','f21Sum'].forEach(function(id){$(id).classList.remove('best');});
+    if(!g){$('verdict').textContent='Enter your salary';$('note').textContent='-';return;}
+    var diff19=(pTax-f19)*1.1, diff21=(pTax-f21)*1.1;
+    if(diff19>0){
+      $('verdict').textContent='Flat 19% saves about '+krw(diff19)+' a year';
+      $('f19Sum').classList.add('best');
+    }else{
+      $('verdict').textContent='Regular tax is lower by about '+krw(-diff19)+' a year';
+      $('pSum').classList.add('best');
+    }
+    var n='For a single person with no other deductions, the flat rate starts to win only at about ₩135 million a year. ';
+    n+= diff21>0?('Even at the proposed 21%, the flat rate would still save about '+krw(diff21)+'.'):
+      (diff19>0?'At the proposed 21%, regular tax would be lower by about '+krw(-diff21)+', so watch the December vote.':'');
+    n+=' Before you choose, add your other deductions: they lower only the regular tax.';
+    $('note').textContent=n;
+    var s=[['Taxable salary',g],['− Earned income deduction',ed],['= Earned income',inc],['− Basic deduction ('+ppl+' × ₩1.5M)',ppl*1.5e6],['− Social insurance',ins],['= Tax base',base],['Tax by progressive rates',calcTax],['− Earned income tax credit',ec],['− Standard tax credit',std],['= Income tax',pTax]];
+    $('steps').innerHTML=s.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+krw(r[1])+'</td></tr>';}).join('');
+  }
+  ['gross','free','ppl','ins'].forEach(function(id){$(id).addEventListener('input',calc);});
+  calc();
+})();
+</script>
+</body>
+</html>

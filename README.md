@@ -5,4 +5,9 @@
 
 - [청년미래적금 만기 수령액 계산기](https://heytakenote.github.io/tools/youth-future-savings.html)
 
+## English: calculators for foreigners in Korea
+
+- [Severance pay calculator (E-9, H-2)](https://heytakenote.github.io/en/korea/severance-pay.html)
+- [19% flat tax vs. regular tax](https://heytakenote.github.io/en/korea/flat-tax-19.html)
+
 사이트: https://heytakenote.github.io/

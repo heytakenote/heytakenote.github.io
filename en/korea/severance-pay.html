@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Korea Severance Pay Calculator for Foreign Workers (E-9, H-2) | heytakenote</title>
+<meta name="description" content="Estimate your severance pay (toejikgeum) in Korea and compare it with your departure guarantee insurance (E-9, H-2). Uses the Ministry of Employment and Labor formula. Free, in English.">
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1f;--muted:#6b6b70;--line:#e3e3e0;--accent:#1f6feb;--accent-soft:#e8f0fe;--good:#0a7d4f;--warn:#a45a00}
+@media (prefers-color-scheme:dark){:root{--bg:#161618;--card:#1f1f22;--text:#ececee;--muted:#a0a0a8;--line:#33333a;--accent:#6ea8ff;--accent-soft:#1f2a3d;--good:#4cc38a;--warn:#f0a443}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;line-height:1.6;font-size:16px}
+main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+a{color:var(--accent)}
+h1{font-size:1.4rem;margin:8px 0 4px;line-height:1.35}
+.sub{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;margin:0 0 6px;font-size:.95rem}
+.field{margin-bottom:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2>*{min-width:0}
+.hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+input[type=number],input[type=date]{width:100%;font-size:1.05rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);min-width:0}
+.check{display:flex;gap:8px;align-items:flex-start;font-weight:600}
+.check input{width:20px;height:20px;margin-top:3px}
+.total{font-size:1.9rem;font-weight:800;color:var(--good);margin:2px 0 10px}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;padding-left:8px}
+tr:last-child td{border-bottom:0}
+.note{margin-top:12px;padding:10px 12px;background:var(--accent-soft);border-radius:10px;font-size:.92rem}
+.warn{color:var(--warn)}
+h2{font-size:1.05rem;margin:0 0 8px}
+ul{padding-left:18px;margin:6px 0}
+li{margin-bottom:4px}
+.small{font-size:.85rem;color:var(--muted)}
+footer{font-size:.82rem;color:var(--muted);margin-top:20px}
+</style>
+</head>
+<body>
+<main>
+<p class="small"><a href="./">← Calculators for foreigners in Korea</a></p>
+<h1>Korea Severance Pay Calculator (퇴직금)</h1>
+<p class="sub">For foreign workers in Korea, including E-9 and H-2 · Rules checked 2026-11-27 · Ministry of Employment and Labor formula</p>
+
+<section class="card">
+  <div class="row2">
+    <div class="field">
+      <label for="start">First day of work</label>
+      <input id="start" type="date" value="2023-12-01">
+    </div>
+    <div class="field">
+      <label for="last">Last day of work</label>
+      <input id="last" type="date" value="2026-11-30">
+    </div>
+  </div>
+  <div class="field">
+    <label for="base">Monthly base pay (KRW, before tax)</label>
+    <input id="base" type="number" inputmode="numeric" min="0" step="10000" value="2200000">
+    <div class="hint">기본급 on your payslip, before tax and insurance are taken out.</div>
+  </div>
+  <div class="field">
+    <label for="extra">Other monthly pay (KRW)</label>
+    <input id="extra" type="number" inputmode="numeric" min="0" step="10000" value="300000">
+    <div class="hint">Overtime, night and holiday pay, and other allowances (기타수당). Use your average for the last 3 months.</div>
+  </div>
+  <div class="row2">
+    <div class="field">
+      <label for="bonus">Bonuses, last 12 months</label>
+      <input id="bonus" type="number" inputmode="numeric" min="0" step="10000" value="0">
+    </div>
+    <div class="field">
+      <label for="leave">Unused leave pay</label>
+      <input id="leave" type="number" inputmode="numeric" min="0" step="10000" value="0">
+    </div>
+  </div>
+  <div class="field">
+    <label class="check"><input id="eps" type="checkbox" checked> I am an E-9 or H-2 worker (departure guarantee insurance, 출국만기보험)</label>
+  </div>
+  <div class="field" id="epsBox">
+    <label for="ordinary">Monthly ordinary wage on your employment permit (KRW)</label>
+    <input id="ordinary" type="number" inputmode="numeric" min="0" step="10000" value="2200000">
+    <div class="hint">통상임금 written on the employment permit. Your employer pays at least 8.3% of it into the insurance every month.</div>
+  </div>
+</section>
+
+<section class="card" aria-live="polite">
+  <div class="small">Estimated severance pay (before retirement income tax)</div>
+  <div class="total" id="total">-</div>
+  <table>
+    <tr><td>Days employed</td><td id="days">-</td></tr>
+    <tr><td>Pay in the last 3 months</td><td id="pay3">-</td></tr>
+    <tr><td>+ Bonus share (3/12)</td><td id="bonus3">-</td></tr>
+    <tr><td>+ Leave pay share (3/12)</td><td id="leave3">-</td></tr>
+    <tr><td>Days in the last 3 months</td><td id="d3">-</td></tr>
+    <tr><td>Average daily wage</td><td id="daily">-</td></tr>
+  </table>
+  <div class="note" id="formula">-</div>
+</section>
+
+<section class="card" id="epsResult" aria-live="polite">
+  <h2>Departure guarantee insurance vs. severance</h2>
+  <table>
+    <tr><td>Insurance paid in by employer (8.3% × months, estimate)</td><td id="ins">-</td></tr>
+    <tr><td>Severance pay (from above)</td><td id="sev2">-</td></tr>
+    <tr><td>Difference your employer must pay</td><td id="gap">-</td></tr>
+  </table>
+  <div class="note" id="epsNote">-</div>
+</section>
+
+<section class="card">
+  <h2>How it is calculated</h2>
+  <ul>
+    <li>Average daily wage = (pay in the 3 months before you left + bonuses × 3/12 + unused leave pay × 3/12) ÷ number of days in those 3 months.</li>
+    <li>Severance pay = average daily wage × 30 days × (days employed ÷ 365).</li>
+    <li>This tool assumes the same monthly pay in each of the last 3 months. If your pay changed, the official calculator lets you enter each month.</li>
+    <li>If your average wage comes out lower than your ordinary wage (통상임금), the ordinary wage is used instead.</li>
+    <li>Insurance estimate = monthly ordinary wage × 8.3% × months employed. The real amount also includes interest, so ask the insurer for a written statement (they must give one).</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Who gets severance pay</h2>
+  <ul>
+    <li>You worked for the same employer for <strong>1 year or more</strong>, and</li>
+    <li>You worked <strong>15 hours or more per week</strong> on average (4-week average).</li>
+    <li>Your visa type and nationality do not matter. Foreign workers have the same right as Korean workers.</li>
+    <li>Your employer must pay within <strong>14 days</strong> after you leave, unless you both agree on a later date.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>E-9 and H-2 workers: departure guarantee insurance</h2>
+  <ul>
+    <li>Employers of E-9 and H-2 workers must join departure guarantee insurance (출국만기보험) within 15 days of the contract start. It counts as your severance pay.</li>
+    <li>The insurer pays within <strong>14 days after you leave Korea</strong>. If you change visa status or apply after leaving, it is 14 days from the application date.</li>
+    <li>You must have worked 1 year or more. If you worked less than 1 year, the money goes back to the employer.</li>
+    <li>If the insurance is less than your legal severance pay, your <strong>employer must pay the difference</strong>.</li>
+    <li>You must claim within <strong>3 years</strong>. After that, unclaimed money is moved to HRD Korea (한국산업인력공단).</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Related calculator</h2>
+  <ul>
+    <li><a href="flat-tax-19.html">Korea 19% flat tax vs. regular tax calculator</a></li>
+  </ul>
+</section>
+
+<footer>
+  <p>Sources (Korean): Ministry of Employment and Labor <a href="https://www.moel.go.kr/retirementpayCal.do" rel="noopener">severance pay calculator and worked example</a>; <a href="https://www.law.go.kr/법령/근로자퇴직급여보장법" rel="noopener">Employee Retirement Benefit Security Act</a> Art. 4, 8, 9; <a href="https://www.law.go.kr/법령/근로기준법" rel="noopener">Labor Standards Act</a> Art. 2 (average wage); <a href="https://www.law.go.kr/법령/외국인근로자의고용등에관한법률" rel="noopener">Act on the Employment of Foreign Workers</a> Art. 13 and its Enforcement Decree Art. 21; <a href="https://www.law.go.kr/admRulInfoP.do?admRulSeq=2000000016711" rel="noopener">MOEL notice on monthly insurance amount (8.3%)</a>. Checked 2026-11-27.</p>
+  <p>Retirement income tax is not included. You can calculate it on Hometax (홈택스) with the "퇴직소득 세액계산 프로그램".</p>
+  <p>This calculator is for reference only and is not legal advice. Company rules can change the actual amount. © heytakenote</p>
+</footer>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var DAY=86400000;
+  function krw(v){return '₩'+Math.round(v).toLocaleString('en-US');}
+  function d(s){if(!s)return null;var p=s.split('-');return Date.UTC(+p[0],+p[1]-1,+p[2]);}
+  function minus3m(t){var x=new Date(t);var y=x.getUTCFullYear(),m=x.getUTCMonth()-3,dd=x.getUTCDate();
+    var r=Date.UTC(y,m,dd); var chk=new Date(r); if(chk.getUTCDate()!==dd){r=Date.UTC(y,m+1,0);} return r;}
+  function calc(){
+    var s=d($('start').value), l=d($('last').value);
+    var base=+$('base').value||0, extra=+$('extra').value||0, bonus=+$('bonus').value||0, leave=+$('leave').value||0;
+    var eps=$('eps').checked; $('epsBox').hidden=!eps; $('epsResult').hidden=!eps;
+    if(s===null||l===null||l<s){$('total').textContent='-';$('formula').textContent='Please enter valid dates.';return;}
+    var exit=l+DAY; // day after the last working day
+    var days=Math.round((exit-s)/DAY);
+    var from=Math.max(minus3m(exit),s);
+    var d3=Math.round((exit-from)/DAY);
+    var months3=Math.min(3,(exit-from)/DAY/(365/12));
+    var pay3=(base+extra)*(d3>=89?3:months3);
+    var b3=bonus*3/12, l3=leave*3/12;
+    var daily=d3?(pay3+b3+l3)/d3:0;
+    var sev=daily*30*days/365;
+    $('days').textContent=days.toLocaleString('en-US')+' days';
+    $('pay3').textContent=krw(pay3); $('bonus3').textContent=krw(b3); $('leave3').textContent=krw(l3);
+    $('d3').textContent=d3+' days'; $('daily').textContent=krw(daily);
+    var eligible=days>=365;
+    if(eligible){
+      $('total').textContent=krw(sev);
+      $('formula').textContent=krw(daily)+' × 30 × '+days.toLocaleString('en-US')+' ÷ 365 = '+krw(sev);
+    }else{
+      $('total').textContent='₩0';
+      $('formula').innerHTML='<span class="warn">You worked '+days+' days. Severance pay starts at 1 year (365 days) with the same employer.</span>';
+    }
+    if(eps){
+      var ord=+$('ordinary').value||0;
+      var months=Math.floor(days/(365/12));
+      var ins=ord*0.083*months;
+      $('ins').textContent=krw(ins);
+      $('sev2').textContent=krw(eligible?sev:0);
+      var gap=eligible?Math.max(0,sev-ins):0;
+      $('gap').textContent=krw(gap);
+      $('epsNote').textContent=!eligible?'Under 1 year: the insurance money goes back to your employer, and no severance is owed.':
+        (gap>0?'The insurance is likely less than your severance pay. Ask the insurer for a written statement of your insurance amount and claim the difference from your employer.':
+        'The insurance likely covers your severance pay. Interest is added, so the actual insurance amount may be a little higher.');
+    }
+  }
+  ['start','last','base','extra','bonus','leave','ordinary'].forEach(function(id){$(id).addEventListener('input',calc);});
+  $('eps').addEventListener('change',calc);
+  calc();
+})();
+</script>
+</body>
+</html>
