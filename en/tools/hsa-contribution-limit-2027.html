@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSA Contribution Limit Calculator 2027 (Partial Year)</title>
+<meta name="description" content="Find your 2027 HSA limit when you had HDHP coverage for only part of the year. Prorates the IRS $4,500 / $9,000 limits by month, adds the age-55 catch-up, and compares the last-month rule.">
+<link rel="canonical" href="https://heytakenote.github.io/en/tools/hsa-contribution-limit-2027.html">
+<style>:root{--bg:#f7f7f5;--card:#fff;--text:#1d1d1f;--muted:#6b6b70;--line:#e3e3e0;--accent:#1f6feb;--good:#1a7f37;--warn:#b35900}
+@media (prefers-color-scheme:dark){:root{--bg:#161618;--card:#1f1f22;--text:#ececee;--muted:#a0a0a8;--line:#33333a;--accent:#6ea8ff;--good:#4ac26b;--warn:#f0a050}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+main{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:1.45rem;line-height:1.3;margin:0 0 6px}
+h2{font-size:1.1rem;margin:28px 0 8px}
+p.sub{color:var(--muted);margin:0 0 20px;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-weight:600;font-size:.92rem;margin:12px 0 4px}
+label:first-child{margin-top:0}
+small.hint{display:block;color:var(--muted);font-weight:400;font-size:.8rem}
+input,select{width:100%;font-size:1rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.result .big{font-size:1.6rem;font-weight:700;color:var(--accent);margin:2px 0 6px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+.note{font-size:.85rem;color:var(--muted)}
+.warn{color:var(--warn)}
+ul{padding-left:20px}
+a{color:var(--accent)}
+a.tool{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;color:var(--text);text-decoration:none}
+a.tool strong{display:block;font-size:1.05rem;color:var(--accent)}
+a.tool span{display:block;font-size:.88rem;color:var(--muted);margin-top:4px}
+nav{font-size:.88rem;margin-bottom:14px}
+footer{font-size:.82rem;color:var(--muted);margin-top:28px;border-top:1px solid var(--line);padding-top:12px}</style>
+</head>
+<body>
+<main>
+<nav><a href="../">← All calculators</a></nav>
+<h1>HSA Contribution Limit Calculator 2027</h1>
+<p class="sub">Started or lost a high-deductible health plan (HDHP) mid-year? Your HSA limit is prorated by month. Find how much you can still put in. Values as of 2026-11-27.</p>
+
+<div class="card">
+  <label for="cov">HDHP coverage type</label>
+  <select id="cov">
+    <option value="self">Self-only</option>
+    <option value="fam">Family</option>
+  </select>
+  <label for="mo">Months you were HSA-eligible on the 1st of the month<small class="hint">Covered by an HDHP, no other disqualifying coverage, not on Medicare, not a dependent.</small></label>
+  <select id="mo"></select>
+  <label><input id="dec" type="checkbox" style="width:auto"> I'm eligible on December 1, 2027<small class="hint">Lets you use the last-month rule (see below).</small></label>
+  <label><input id="age" type="checkbox" style="width:auto"> I'm 55 or older by December 31, 2027</label>
+  <label for="emp">Employer contributions to your HSA in 2027 ($)<small class="hint">Including pre-tax payroll (cafeteria plan) contributions.</small></label>
+  <input id="emp" type="number" inputmode="numeric" min="0" step="50" value="0">
+  <label for="done">Amount you already contributed yourself ($)</label>
+  <input id="done" type="number" inputmode="numeric" min="0" step="50" value="0">
+</div>
+
+<div class="card result" aria-live="polite">
+  <div>You can still contribute</div>
+  <div class="big" id="out">$0</div>
+  <table id="tbl"></table>
+  <p class="note" id="msg"></p>
+</div>
+
+<h2>2027 HSA and HDHP numbers</h2>
+<table>
+  <tr><th></th><th class="n">Self-only</th><th class="n">Family</th></tr>
+  <tr><td>HSA contribution limit</td><td class="n">$4,500</td><td class="n">$9,000</td></tr>
+  <tr><td>Catch-up (age 55+)</td><td class="n">$1,000</td><td class="n">$1,000</td></tr>
+  <tr><td>HDHP minimum deductible</td><td class="n">$1,750</td><td class="n">$3,500</td></tr>
+  <tr><td>HDHP out-of-pocket max</td><td class="n">$8,700</td><td class="n">$17,400</td></tr>
+</table>
+
+<h2>Monthly proration vs. the last-month rule</h2>
+<ul>
+  <li><strong>Monthly method:</strong> you get 1/12 of the annual limit for each month you're eligible on the first day of the month.</li>
+  <li><strong>Last-month rule:</strong> if you're eligible on December 1, you can contribute the full-year limit as if you'd been eligible all year.</li>
+  <li><span class="warn">The catch:</span> under the last-month rule you must stay eligible through a testing period (through December 31, 2028 for a 2027 contribution). If you don't, the extra amount becomes taxable income plus a 10% additional tax, unless the reason is death or disability.</li>
+</ul>
+
+<h2>FAQ</h2>
+<p><strong>Married with family coverage?</strong><br>The $9,000 family limit is shared between spouses. Each spouse 55 or older can add their own $1,000, but only into an HSA in their own name.</p>
+<p><strong>What about Medicare?</strong><br>Once you're enrolled in Medicare, you can't contribute for those months.</p>
+<p><strong>Deadline?</strong><br>You can make 2027 contributions until your 2027 tax return due date (April 2028, not counting extensions).</p>
+
+<footer>
+  <p>Sources: <a href="https://www.irs.gov/pub/irs-drop/rp-26-24.pdf">IRS Rev. Proc. 2026-24</a> (2027 limits) · <a href="https://www.irs.gov/publications/p969">IRS Publication 969</a> (proration, last-month rule, catch-up). Values as of 2026-11-27.</p>
+  <p>This calculator gives an estimate for information only. It is not tax advice. © heytakenote</p>
+</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id), v=id=>Math.max(0,parseFloat($(id).value)||0);
+const usd=n=>'$'+Math.round(n).toLocaleString('en-US');
+for(let i=12;i>=0;i--){const o=document.createElement('option');o.value=i;o.textContent=i+(i===1?' month':' months');$('mo').appendChild(o);}
+$('mo').value=6;
+function calc(){
+  const base=$('cov').value==='fam'?9000:4500;
+  const mo=+$('mo').value,dec=$('dec').checked,c55=$('age').checked;
+  const monthly=(base+(c55?1000:0))*mo/12;
+  const full=base+(c55?1000:0);
+  const useLast=dec&&full>monthly;
+  const limit=dec?full:monthly;
+  const left=Math.max(0,limit-v('emp')-v('done'));
+  $('out').textContent=usd(left);
+  $('tbl').innerHTML='<tr><td>Monthly method ('+mo+'/12)</td><td class="n">'+usd(monthly)+'</td></tr>'+
+  (dec?'<tr><td>Last-month rule (full year)</td><td class="n">'+usd(full)+'</td></tr>':'')+
+  '<tr><td>Your limit used</td><td class="n">'+usd(limit)+'</td></tr>'+
+  '<tr><td>Minus employer contributions</td><td class="n">−'+usd(v('emp'))+'</td></tr>'+
+  '<tr><td>Minus your contributions so far</td><td class="n">−'+usd(v('done'))+'</td></tr>';
+  let msg='';
+  if(v('emp')+v('done')>limit)msg='Total contributions are over your limit by '+usd(v('emp')+v('done')-limit)+'. Withdraw the excess before your filing deadline to avoid a 6% excise tax.';
+  else if(useLast)msg='This uses the last-month rule. You must stay HSA-eligible through December 31, 2028, or '+usd(full-monthly)+' becomes taxable plus a 10% additional tax.';
+  else if(!dec&&mo<12)msg='Because you are not eligible on December 1, only the monthly method applies.';
+  $('msg').textContent=msg;
+}
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>
